@@ -1,5 +1,5 @@
 // FILE: script.js
-
+// Documentation: no outside help received
 // complete the TODO comments
 
 // Get references to page elements
@@ -31,6 +31,10 @@ function getIngredients() {
 
   return new Promise((resolve, reject) => {
     // Your code here
+    showMessage("Gathering ingredients...");
+    wait(2000).then(() => {
+      resolve("Ingredients ready");
+    })
   });
 }
 
@@ -44,6 +48,15 @@ function blendSmoothie() {
 
   return new Promise((resolve, reject) => {
     // Your code here
+    showMessage("Blending smoothie...");
+    wait(3000).then(() => {
+      if(Math.random() < 0.3){
+        reject("ERROR: Blender broke!");
+      }
+      else{
+        resolve("Smoothie blended");
+      }
+    });
   });
 }
 
@@ -56,6 +69,10 @@ function pourSmoothie() {
 
   return new Promise((resolve, reject) => {
     // Your code here
+    showMessage("Pouring into cup...");
+    wait(1000).then(() => {
+      resolve("Smoothie is ready!");
+    })
   });
 }
 
@@ -72,6 +89,21 @@ function makeSmoothieWithPromises() {
   //   .then(...)
   //   .then(...)
   //   .catch(...)
+  getIngredients()
+    .then(msg => {
+      showMessage(msg);
+      return blendSmoothie();
+    })
+    .then(msg => {
+      showMessage(msg);
+      return pourSmoothie();
+    })
+    .then(msg => {
+      showMessage(msg);
+    })
+    .catch(err => {
+      showMessage("ERROR: " + err);
+    })
 }
 
 /* =========================
@@ -88,4 +120,22 @@ async function makeSmoothieAsync() {
   // await pourSmoothie()
   // Show final success message
   // Catch and display any errors
+  try {
+    let msg;
+
+    msg = await getIngredients();
+    showMessage(msg);
+
+    msg = await blendSmoothie();
+    showMessage(msg);
+
+    msg = await pourSmoothie();
+    showMessage(msg);
+
+  }
+  catch (err){
+    showMessage(err);
+  }
 }
+
+button.addEventListener("click", makeSmoothieAsync);
